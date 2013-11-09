@@ -38,7 +38,7 @@ public class Date {
 	}
 	
 	public String toString()	{
-		String objDesc = "Tag:" + this.day + "." + this.month + "." + this.year;
+		String objDesc = "Tag: " + this.day + "." + this.month + "." + this.year;
 		
 		return objDesc;
 	}
@@ -63,10 +63,39 @@ public class Date {
 		age1 = this.daysSince1900();
 		
 		//Da durch den Konstruktor ohne Übergabeparameter ein Objekt mit dem aktuellen Datum erstellt wird.
-		age2 = new Date().daysSince1900();
+		age2 = (new Date()).daysSince1900();
 		
 		ageDiff = age2 - age1;
 		
 		return ageDiff;
 	}
+	
+	public int getAgeInYears(Date today)	{
+		int age, ageDiff = 0;
+		
+		//Speichere die Zeit in Tagen
+		age = this.getAgeInDays(today);
+		/* Für alle 365 Tage wird die Variable die die Zeit in Jahre speichert um 1 erhöht.
+		 * Die Zeit wird natürlich auch pro Zyklus um 365 reduziert, damit man nicht in einer Endlosschleife endet.
+		 */
+		for (; age >= 365; ageDiff++)	{
+			age -= 365;
+		}
+		
+		return ageDiff;
+	}
+	
+	/* Erläuterung zu f) vi)
+	 * Wie in den Teilaufgaben iv) und v) ersichtlich, ist es wichtig, dass Methoden 
+	 * entsprechend kommentiert und dokumentiert werden. Ohne diese Dokumentation kann
+	 * man erst durch genaues duchlesen und nachvollziehen der Methode verstehen in welcher
+	 * Maßeinheit das Alter zurückgegeben wird. Es besteht ja auch ein gewaltiger 
+	 * unterschied zwischen dem Alter in Jahren und in Tagen.
+	 * 
+	 * Außerdem kann nur durch vollständige Dokumentation sichergestellt werden, dass man
+	 * zu einem späteren Zeitpunkt gleich das Projekt versteht und somit gleich weiterarbeiten
+	 * kann. Wenn z.B. eine aufwendige Methode nicht kommentiert ist, kann es durchaus zu 
+	 * einigen Stunden an Aufwand kommen, damit diese nachvollzogen werden kann und eventuell 
+	 * optimiert werden kann.
+	 */
 }

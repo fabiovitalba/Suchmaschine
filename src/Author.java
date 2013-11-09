@@ -57,8 +57,20 @@ public class Author {
 	public String getContactInformation()	{
 		String contact = this.firstName + " " + this.lastName + Terminal.NEWLINE
 				+ "E-Mail: " + this.email + Terminal.NEWLINE
-				+ "Wohnhaft in:" + this.residence;
+				+ "Wohnhaft in: " + this.residence;
 		
 		return contact;
+	}
+	
+	//Gibt das Alter des Autors am Zeitpunkt today in Jahren zurück.
+	public int getAge(Date today)	{
+		int age = 0;
+		
+		/* Es wird einfach eine neue Instanz der Variable Date erstellt, die ja ohne 
+		 * Übergabeparameter das aktuelle Datum wählt.
+		 */
+		age = this.birthday.getAgeInYears(today);
+		
+		return age;
 	}
 }

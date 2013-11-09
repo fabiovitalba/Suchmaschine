@@ -53,4 +53,13 @@ public class Review {
 		
 		return objDesc;
 	}
+	
+	//Gibt das Alter der Rezension am Zeitpunkt today in Tagen zurück.
+	public int getAge(Date today)	{
+		int age = 0;
+		
+		age = this.releaseDate.getAgeInDays(today);
+		
+		return age;
+	}
 }
