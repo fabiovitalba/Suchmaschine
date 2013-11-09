@@ -10,9 +10,9 @@ public class Test {
 		Document doc2 = new Document("Wuerfelwelt: Ein Minecraft Roman", "Deutsch", "Ein Gaming Roman.", new Date(28, 6, 2013), aut1);
 		Document doc3 = new Document("Die Vorgeschichte zum Cataclysm", "Deutsch", "Ein Gaming Roman zu World of Warcraft.", new Date(19, 7, 2011), aut2);
 		
-		Review rev1 = new Review(doc1, aut3, "English", new Date(2, 11, 2013), 7);
-		Review rev2 = new Review(doc3, aut3, "English", new Date(22, 10, 2013), 9);
-		Review rev3 = new Review(doc3, aut1, "Deutsch", new Date(3, 11, 2013), 5);
+		Review rev1 = new Review(aut3, doc1, "English", new Date(2, 11, 2013), 7);
+		Review rev2 = new Review(aut3, doc3, "English", new Date(22, 10, 2013), 9);
+		Review rev3 = new Review(aut1, doc3, "Deutsch", new Date(3, 11, 2013), 5);
 		
 		System.out.println("Liste der Autoren mit toString()-Methode:");
 		System.out.println(aut1.toString());

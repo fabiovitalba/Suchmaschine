@@ -49,12 +49,13 @@ public class Document {
 	}
 	
 	public String toString()	{
-		String objDesc = "Dokument: " + this.title + " (" + this.author.toString() + ", " + this.releaseDate.toString() + ")";
+		String objDesc = "Dokument: " + this.title + " (" + this.author.toString() + ", "
+				+ this.releaseDate.toString() + ")";
 		
 		return objDesc;
 	}
 	
-	//Gibt das Alter des Dokuments am Zeitpunkt today in Tagen zurück.
+	//Gibt das Alter des Dokuments am Zeitpunkt today in Tagen zurueck.
 	public int getAge(Date today)	{
 		int age = 0;
 		

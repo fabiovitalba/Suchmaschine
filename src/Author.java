@@ -62,12 +62,12 @@ public class Author {
 		return contact;
 	}
 	
-	//Gibt das Alter des Autors am Zeitpunkt today in Jahren zurück.
+	//Gibt das Alter des Autors am Zeitpunkt today in Jahren zurueck.
 	public int getAge(Date today)	{
 		int age = 0;
 		
 		/* Es wird einfach eine neue Instanz der Variable Date erstellt, die ja ohne 
-		 * Übergabeparameter das aktuelle Datum wählt.
+		 * Uebergabeparameter das aktuelle Datum waehlt.
 		 */
 		age = this.birthday.getAgeInYears(today);
 		

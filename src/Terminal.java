@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 
 /**
  * Diese Klasse stellt einige einfache Methoden zur Ein- und Ausgabe auf einem
- * Terminal zur Verfügung
+ * Terminal zur Verfuegung
  */
 public final class Terminal {
 

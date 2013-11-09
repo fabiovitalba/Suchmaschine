@@ -8,12 +8,19 @@ public class Review {
 	private int rating;
 	
 	//Constructor
-	Review(Document reviewedDocument, Author author, String language, Date releaseDate, int rating)	{
-		this.reviewedDocument = reviewedDocument;
+	Review(Author author, Document reviewedDocument, String language, Date releaseDate, int rating)	{
 		this.author = author;
+		this.reviewedDocument = reviewedDocument;
 		this.language = language;
 		this.releaseDate = releaseDate;
-		this.rating = rating;
+		if (rating > 10)	{
+			this.rating = 10;
+		}	else if (rating < 0)	{
+			this.rating = 0;
+		}	else	{
+			this.rating = rating;
+		}
+		
 	}
 	
 	//Methods
@@ -49,12 +56,13 @@ public class Review {
 	}
 	
 	public String toString()	{
-		String objDesc = "Rezension zu: " + this.reviewedDocument.toString() + "(Von: " + this.author.toString() + ")";
+		String objDesc = "Rezension zu: " + this.reviewedDocument.toString() + "(Von: " 
+	+ this.author.toString() + ")";
 		
 		return objDesc;
 	}
 	
-	//Gibt das Alter der Rezension am Zeitpunkt today in Tagen zurück.
+	//Gibt das Alter der Rezension am Zeitpunkt today in Tagen zurueck.
 	public int getAge(Date today)	{
 		int age = 0;
 		
