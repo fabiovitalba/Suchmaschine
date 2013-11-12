@@ -8,7 +8,7 @@ public class Author {
 	private String email;
 	
 	//Constructor
-	Author(String firstName, String lastName, Date birthday, String residence, String email)	{
+	public Author(String firstName, String lastName, Date birthday, String residence, String email)	{
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthday = birthday;
@@ -48,6 +48,7 @@ public class Author {
 		this.email = email;
 	}
 	
+	@Override
 	public String toString()	{
 		String objDesc = "Autor: " + this.firstName + " " + this.lastName;
 		
@@ -55,11 +56,9 @@ public class Author {
 	}
 	
 	public String getContactInformation()	{
-		String contact = this.firstName + " " + this.lastName + Terminal.NEWLINE
+		return this.firstName + " " + this.lastName + Terminal.NEWLINE
 				+ "E-Mail: " + this.email + Terminal.NEWLINE
 				+ "Wohnhaft in: " + this.residence;
-		
-		return contact;
 	}
 	
 	//Gibt das Alter des Autors am Zeitpunkt today in Jahren zurueck.

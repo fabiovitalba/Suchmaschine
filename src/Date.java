@@ -6,7 +6,7 @@ public class Date {
 	private int year;
 	
 	//Constructor
-	Date(int day, int month, int year)	{
+	public Date(int day, int month, int year)	{
 		if (day > 30)	{
 			this.day = 30;
 		}	else if (day < 1)	{
@@ -23,7 +23,7 @@ public class Date {
 		}
 		this.year = year;
 	}
-	Date()	{
+	public Date()	{
 		this.day = Terminal.TODAYS_DAY;
 		this.month = Terminal.TODAYS_MONTH;
 		this.year = Terminal.TODAYS_YEAR;
@@ -49,52 +49,21 @@ public class Date {
 		this.year = year;
 	}
 	
+	@Override
 	public String toString()	{
-		String objDesc = "Tag: " + this.day + "." + this.month + "." + this.year;
-		
-		return objDesc;
+		return "Tag: " + this.day + "." + this.month + "." + this.year;
 	}
 	
 	private int daysSince1900()	{
-		int daysPassed = 0;
-		for (int i = 1900; i < this.year; i++)	{	//Fuege pro Jahr 365 Tage hinzu
-			daysPassed += 365;
-		}
-		for (int i = 0; i < this.month; i++)	{
-			daysPassed += 30;
-		}
-		daysPassed += this.day;
-		
-		return daysPassed;
+		return (this.day - 1) + ((this.month - 1) * 30) + ((this.year - 1900) * 360);
 	}
 	
 	public int getAgeInDays(Date today)	{
-		int age1 = 0, age2 = 0, ageDiff = 0;
-		
-		//Alter des aktuellen Dokuments
-		age1 = this.daysSince1900();
-		
-		//Da durch den Konstruktor ohne Uebergabeparameter ein Objekt mit dem aktuellen Datum erstellt wird.
-		age2 = (new Date()).daysSince1900();
-		
-		ageDiff = age2 - age1;
-		
-		return ageDiff;
+		return today.daysSince1900() - this.daysSince1900();
 	}
 	
 	public int getAgeInYears(Date today)	{
-		int age, ageDiff = 0;
-		
-		//Speichere die Zeit in Tagen
-		age = this.getAgeInDays(today);
-		/* Fuer alle 365 Tage wird die Variable die die Zeit in Jahre speichert um 1 erhoeht.
-		 * Die Zeit wird natuerlich auch pro Zyklus um 365 reduziert, damit man nicht in einer Endlosschleife endet.
-		 */
-		for (; age >= 365; ageDiff++)	{
-			age -= 365;
-		}
-		
-		return ageDiff;
+		return getAgeInDays(today)/(360);
 	}
 	
 	/* Erlaeuterung zu f) vi)

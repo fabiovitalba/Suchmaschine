@@ -8,7 +8,7 @@ public class Review {
 	private int rating;
 	
 	//Constructor
-	Review(Author author, Document reviewedDocument, String language, Date releaseDate, int rating)	{
+	public Review(Author author, Document reviewedDocument, String language, Date releaseDate, int rating)	{
 		this.author = author;
 		this.reviewedDocument = reviewedDocument;
 		this.language = language;
@@ -55,11 +55,9 @@ public class Review {
 		this.rating = rating;
 	}
 	
+	@Override
 	public String toString()	{
-		String objDesc = "Rezension zu: " + this.reviewedDocument.toString() + "(Von: " 
-	+ this.author.toString() + ")";
-		
-		return objDesc;
+		return "Rezension zu: " + this.reviewedDocument.toString() + "(Von: " + this.author.toString() + ", Wertung: " + this.rating + ")";
 	}
 	
 	//Gibt das Alter der Rezension am Zeitpunkt today in Tagen zurueck.

@@ -8,7 +8,7 @@ public class Document {
 	private Author author;
 	
 	//Constructor
-	Document(String title, String language, String description, Date releaseDate, Author author)	{
+	public Document(String title, String language, String description, Date releaseDate, Author author)	{
 		this.title = title;
 		this.language = language;
 		this.description = description;
@@ -48,11 +48,9 @@ public class Document {
 		this.author = author;
 	}
 	
+	@Override
 	public String toString()	{
-		String objDesc = "Dokument: " + this.title + " (" + this.author.toString() + ", "
-				+ this.releaseDate.toString() + ")";
-		
-		return objDesc;
+		return "Dokument: " + this.title + " (" + this.author.toString() + ", "	+ this.releaseDate.toString() + ")";
 	}
 	
 	//Gibt das Alter des Dokuments am Zeitpunkt today in Tagen zurueck.
