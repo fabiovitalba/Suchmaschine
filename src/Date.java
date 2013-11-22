@@ -7,20 +7,8 @@ public class Date {
 	
 	//Constructor
 	public Date(int day, int month, int year)	{
-		if (day > 30)	{
-			this.day = 30;
-		}	else if (day < 1)	{
-			this.day = 1;
-		}	else	{
-			this.day = day;
-		}
-		if (month > 12)	{
-			this.month = 12;
-		}	else if (month < 1)	{
-			this.month = 1;
-		}	else	{
-			this.month = month;
-		}
+		this.setDay(day);
+		this.setMonth(month);
 		this.year = year;
 	}
 	public Date()	{
@@ -34,13 +22,25 @@ public class Date {
 		return this.day;
 	}
 	public void setDay(int day)	{
-		this.day = day;
+		if (day > 30)	{
+			this.day = 30;
+		}	else if (day < 1)	{
+			this.day = 1;
+		}	else	{
+			this.day = day;
+		}
 	}
 	public int getMonth()	{
 		return this.month;
 	}
 	public void setMonth(int month)	{
-		this.month = month;
+		if (month > 12)	{
+			this.month = 12;
+		}	else if (month < 1)	{
+			this.month = 1;
+		}	else	{
+			this.month = month;
+		}
 	}
 	public int getYear()	{
 		return this.year;

@@ -13,13 +13,7 @@ public class Review {
 		this.reviewedDocument = reviewedDocument;
 		this.language = language;
 		this.releaseDate = releaseDate;
-		if (rating > 10)	{
-			this.rating = 10;
-		}	else if (rating < 0)	{
-			this.rating = 0;
-		}	else	{
-			this.rating = rating;
-		}
+		this.setRating(rating);
 		
 	}
 	
@@ -52,7 +46,13 @@ public class Review {
 		return this.rating;
 	}
 	public void setRating(int rating)	{
-		this.rating = rating;
+		if (rating > 10)	{
+			this.rating = 10;
+		}	else if (rating < 0)	{
+			this.rating = 0;
+		}	else	{
+			this.rating = rating;
+		}
 	}
 	
 	@Override
