@@ -1,44 +1,129 @@
-
+/**
+ * This class represents a word and its count. 
+ * 
+ * This class ensures that the count of the represented word is never negative.
+ * 
+ *
+ */
 public class WordCount {
-	//Attributes
-	private String text;
+	/**
+	 * the represented word
+	 */
+	private String word;
+	
+	/**
+	 * the count of the represented word
+	 */
 	private int count;
 	
-	//Constructor
-	public WordCount(String text, int count)	{
-		this.text = text;
-		this.count = count;
+	
+	/**
+	 * Creates an instance of this class.
+	 * 
+	 * This constructor calls {@link WordCount#WordCount(String, int)}
+	 * with the parameters set to <code>word</code> and <code>0</code>. 
+	 * 
+	 * @param word the represented word
+	 */
+	public WordCount(String word) {
+		this(word, 0);
 	}
 	
-	//Methods
-	public String getText() {
-		return text;
+	
+	/**
+	 * Creates an instance of this class representing the specified <code>word</code>
+	 * with its count set to <code>count</code>.
+	 * 
+	 * If the specified word is <code>null</code>, then the word is set to an empty {@link String}. 
+	 * If the specified count is lower than <code>0</code>, then the count is set
+	 * according to {@link WordCount#setCount(int)}.
+	 * 
+	 * @param word the represented word
+	 * @param count the count of <code>word</code>
+	 */
+	public WordCount(String word, int count) {
+		if (word == null) {
+			this.word = "";
+		} else {
+			this.word = word;
+		}
+		
+		this.setCount(count);
 	}
-	public void setText(String text) {
-		this.text = text;
+
+	
+	/**
+	 * Returns the represented word.
+	 * 
+	 * @return the represented word
+	 */
+	public String getWord() {
+		return word;
 	}
+
+
+	/**
+	 * Returns the count of the represented word.
+	 * 
+	 * @return the count of the represented word
+	 */
 	public int getCount() {
 		return count;
 	}
+
+
+	/**
+	 * Sets the count of the represented word. 
+	 * 
+	 * If the specified count is lower than <code>0</code>, then the count is set to <code>0</code>.
+	 * 
+	 * @param count the new count
+	 */
 	public void setCount(int count) {
-		/* Wird ein illegaler Wert eingegeben (d.h. ein Negativer Wert, so wird die Anzahl einfach
-		 * auf 0 gesetzt.
-		 */
-		if (count < 0)	{
-			count = 0;
+		if (count < 0) {
+			this.count = 0;
+		} else {
+			this.count = count;
 		}
-		this.count = count;
 	}
 	
-	public int incrementCount()	{
+	
+	
+	/**
+	 * Increases the Count of the represented word by <code>1</code>.
+	 */
+	public int incrementCount() {
 		this.count++;
 		return this.count;
 	}
-	public int incrementCount(int n)	{
-		if (n < 0)	{
-			n = 0;
+	
+	
+	/**
+	 * Increases the count of the represented word by the specified value <code>n</code>.
+	 * 
+	 * If the specified value <code>n</code> is lower than <code>0</code>, nothing will happen.
+	 *  
+	 * @param n the value by which the count is increased
+	 */
+	public int incrementCount(int n) {
+		if (n > 0) {
+			this.count += n;
 		}
-		this.count += n;
 		return this.count;
+	}
+
+	
+	
+	/**
+	 * Returns true, if this instance and the specified {@link WordCount} equal.
+	 * 
+	 * @param wordCount the other WordCount 
+	 * @return true, if this instance and the specified {@link WordCount} equal
+	 */
+	public boolean equals(WordCount wordCount) {
+		if(wordCount == null)
+			return false;
+		return this.count == wordCount.count 
+			&& this.word.equals(wordCount.word);
 	}
 }
