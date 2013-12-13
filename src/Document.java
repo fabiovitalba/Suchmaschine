@@ -6,6 +6,7 @@ public class Document {
 	private String description;
 	private Date releaseDate;
 	private Author author;
+	private WordCountArray wordCounts;
 	public static final String[] SUFFICES = {
 		"ab",
 		"al",
@@ -61,7 +62,6 @@ public class Document {
 		"wert",
 		"würdig"
 	};
-	private WordCountArray wordCounts;
 	
 	//Constructors
 	public Document(String title, String language, String description,
@@ -74,47 +74,52 @@ public class Document {
 		this.releaseDate = releaseDate;
 		this.author = author;
 	}
-	
+
 	public Document(String title, String language, String description,
 			Date releaseDate, Author author, String text) {
 		this(title, language, description, releaseDate, author);
 		
 		this.addText(text);
 	}
-	
+
 	//Methods
 	public String getTitle() {
 		return title;
 	}
-	
+
 	public String getLanguage() {
 		return language;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public Date getReleaseDate() {
 		return releaseDate;
 	}
-	
+
 	public Author getAuthor() {
 		return author;
 	}
-	
+
 	public WordCountArray getWordCounts() {
 		return this.wordCounts;
 	}
-	
+
 	public String toString() {
-		return this.title + " by " + this.author.toString();
+		if (this.author != null) {
+			return this.title + " by " + this.author.toString();
+		}
+		else {
+			return this.title;
+		}
 	}
-	
+
 	public int getAge(Date today) {
 		return this.releaseDate.getAgeInDays(today);
 	}
-	
+
 	public void setTitle(String title) {
 		if (title == null) {
 			this.title = "";
@@ -146,7 +151,7 @@ public class Document {
 	public void setAuthor(Author author) {
 		this.author = author;
 	}
-	
+
 	private static String[] tokenize(String text) {
 		int wordCount = 0;
 		
@@ -202,7 +207,7 @@ public class Document {
 			this.wordCounts.add(word, 1);
 		}
 	}
-	
+
 	private static boolean suffixEqual(String word1, String word2, int n) {		
 		/* if n is too large, last n chars are not equal */
 		if (n > word1.length() || n > word2.length()) {
@@ -222,7 +227,7 @@ public class Document {
 	
 		return isEqual;
 	}
-	
+
 	private static String findSuffix(String word) {
 		if (word == null || word.equals("")) {
 			return null;
@@ -246,7 +251,7 @@ public class Document {
 		}
 		return suffixHit;
 	}
-	
+
 	private static String cutSuffix(String word, String suffix) {
 		if (suffix == null || suffix.equals("")) {
 			return word;
@@ -270,29 +275,25 @@ public class Document {
 		
 		return wordWithoutSuffix;
 	}
-	
-	public boolean equals (Document document)	{
-		if (document == null)	{
+
+	public boolean equals(Document document) {
+		if (this == document) {
+			return true;
+		}
+		
+		if (document == null) {
 			return false;
 		}
-		if (!this.getTitle().equals(document.getTitle()))	{
-			return false;
-		}
-		if (!this.getLanguage().equals(document.getLanguage()))	{
-			return false;
-		}
-		if (!this.getDescription().equals(document.getDescription()))	{
-			return false;
-		}
-		if (!this.getReleaseDate().equals(document.getReleaseDate()))	{
-			return false;
-		}
-		if (!this.getAuthor().equals(document.getAuthor()))	{
-			return false;
-		}
-		if (!this.getWordCounts().equals(document.getWordCounts()))	{
-			return false;
-		}
-		return true;
+		
+		return
+			this.title.equals(document.title) 
+			&& this.language.equals(document.language) 
+			&& this.description.equals(document.description) 
+			&& ((this.author != null && this.author.equals(document.author)) 
+				|| (this.author == null && document.author == null)) 
+			&& ((this.releaseDate != null && this.releaseDate.equals(document.releaseDate)) 
+				|| (this.releaseDate == null && document.releaseDate == null))
+			&& ((this.wordCounts != null && this.wordCounts.equals(document.getWordCounts())) 
+				|| (this.wordCounts == null && document.getWordCounts() == null));
 	}
 }

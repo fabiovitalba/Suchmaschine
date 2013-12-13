@@ -2,297 +2,339 @@
 public class DocumentCollection {
 	//Attributes
 	private DocumentCollectionCell first;
+	private DocumentCollectionCell last;
+	private int size;
 	
 	//Constructors
-	public DocumentCollection()	{
-		this.setFirst(null);
-	}
-	
-	public DocumentCollection(DocumentCollectionCell dcc)	{
-		this.setFirst(dcc);
+	public DocumentCollection() {
+		this.first = null;
+		this.last = null;
+		this.size = 0;
 	}
 	
 	//Methods
-	public Document get(int index)	{
-		if (index >= this.size())	{
-			return null;
-		}
-		if (index < 0)	{
-			return null;
-		}
-		if (this.isEmpty())	{
-			return null;
-		}
-		
-		DocumentCollectionCell temp = this.first;
-		for (int i = 0; i < index; i++)	{
-			temp = temp.getNext();
-		}
-		return temp.getDocument();
-	}
-	
-	public Document getFirst()	{
-		return get(0);
-	}
-	
-	public Document getLast()	{
-		return get(size() - 1);
-	}
-	
-	public void setFirst(DocumentCollectionCell first) {
-		this.first = first;
-	}
-	
-	public void addFirst(Document doc)	{
-		if (doc == null)	{
+	public void addFirst(Document doc) {
+		if (doc == null) {
 			return;
 		}
-		//Shortest method: first = new DocumentCollectionCell(doc, first);
-		if (!this.isEmpty())	{
-			DocumentCollectionCell temp = this.first;
-			this.setFirst(new DocumentCollectionCell(doc));
-			this.first.setNext(temp);
-		}	else	{
-			this.setFirst(new DocumentCollectionCell(doc));
+		
+		if (this.isEmpty()) {
+			/* list empty, add as one and only element */
+			this.first = new DocumentCollectionCell(doc, null);
+			this.last = first;
 		}
+		else {
+			this.first = new DocumentCollectionCell(doc, first);
+		}
+		
+		size++;
 	}
 
-	public void addLast(Document doc)	{
-		if (doc == null)	{
+	public void addLast(Document doc) {
+		if (doc == null) {
 			return;
 		}
 		
-		if (!this.isEmpty())	{
-			DocumentCollectionCell last = this.first;
-			while (last.getNext() != null)	{
-				last = last.getNext();
-			}
-			last.setNext(new DocumentCollectionCell(doc));
-		}	else	{
-			this.setFirst(new DocumentCollectionCell(doc));
+		if (this.isEmpty()) {
+			/* list empty, add as only element */
+			this.first = new DocumentCollectionCell(doc, null);
+			this.last = first;		
 		}
-	}
-	
-	public int size()	{
-		int length = 0;
-		
-		if (isEmpty())	{
-			return 0;
-		}
-		
-		DocumentCollectionCell last = this.first;
-		
-		while (last.getNext() != null)	{
-			if (last.getDocument() != null)	{
-				length++;
-			}
+		else {
+			last.setNext(new DocumentCollectionCell(doc, null));
 			last = last.getNext();
 		}
 		
-		return length + 1;
+		size++;
 	}
-	
-	public boolean isEmpty()	{
-		if (this.first == null)	{
-			return true;
-		}	
-		if (this.first.getDocument() == null)	{
-			return true;
-		}
-		return false;
-		
-	}
-	
-	public boolean remove(int index)	{
-		if (index >= size())	{
-			return false;
-		}
-		if (index < 0)	{
-			return false;
-		}
-		if (isEmpty())	{
-			return false;
-		}
-		
-		DocumentCollectionCell prev = this.first;
-		DocumentCollectionCell temp = this.first;
-		
-		for (int i = 0; i < index; i++)	{
-			if (temp != this.first)	{
-				prev = prev.getNext();
-			}
-			temp = temp.getNext();
-		}
-		
-		if (temp.getNext() == null)	{
-			if (index == 0)	{
-				this.first = null;
-			}	else	{
-				prev.setNext(null);
-			}
-		}	else if (temp.getNext().getNext() == null)	{
-			temp.setNext(null);
-		}	else	{
-			temp.setNext(temp.getNext().getNext());
-		}
-		
-		return true;
-	}
-	
-	public void removeFirst()	{
-		this.remove(0);
-	}
-	
-	public void removeLast()	{
-		this.remove(size() - 1);
-	}
-	
-	public boolean contains(Document doc)	{
-		if (doc == null)	{
-			return false;
-		}
-		
-		DocumentCollectionCell temp = this.first;
-		
-		while (temp != null)	{
-			if (temp.getDocument().equals(doc))	{
-				return true;
-			}
-			temp = temp.getNext();
-		}
-		
-		return false;
-	}
-	
-	public int indexOf(Document doc)	{
-		if (doc == null)	{
-			return -1;
-		}
-		if (!this.contains(doc))	{
+
+	public int indexOf(Document doc) {
+		if (doc == null || this.isEmpty()) {
 			return -1;
 		}
 		
-		DocumentCollectionCell temp = this.first;
+		/* loop over list and find document */
+		
+		DocumentCollectionCell tmp = this.first;
 		int index = 0;
 		
-		do	{
-			if (temp.getDocument().equals(doc))	{
-				return index;
+		while (tmp != null) {
+			if (tmp.getDocument().equals(doc)) {
+				return index; 
 			}
-			index++;
-			temp = temp.getNext();
 			
-		}	while(temp.getNext() != null);
+			tmp = tmp.getNext();
+			index++;
+		}
 		
 		return -1;
 	}
-	
-	private WordCountArray allWords()	{
-		WordCountArray wca = new WordCountArray(2);
+
+	public boolean contains(Document doc) {
+		return (this.indexOf(doc) != -1);
+	}
+
+	public boolean remove(int index) {
+		if (index < 0 || index >= this.size()) {
+			return false;
+		}
 		
-		if (isEmpty())	{
+		if (this.isEmpty()) {
+			return false;
+		}
+		
+		/* remove first */
+		if (index == 0) {
+			this.removeFirst();
+			return true;
+		}
+		
+		/* remove last */
+		if (index == this.size() - 1) {
+			this.removeLast();
+			return true;
+		}
+		
+		/* we will only get here, if index >= 1 and size >= 2 */
+		
+		/* loop to index, keep track of previous */
+		DocumentCollectionCell actual = this.first.getNext();
+		DocumentCollectionCell prev = this.first;
+		int i = 1;
+		
+		while (i < index) {
+			prev = actual;
+			actual = actual.getNext();
+			i++;
+		}
+		
+		/* delete actual */
+		prev.setNext(actual.getNext());
+		size--;
+		return true;
+	}
+	
+	public void removeLast() {
+		if (this.isEmpty()) {
+			return;
+		}
+		
+		/* one element: clear list and return */ 
+		if (this.size() == 1) {
+			this.clear();
+			return;
+		}
+		
+		/* navigate to the element before last */		
+		DocumentCollectionCell newLast = this.first;		
+		while (newLast.getNext() != this.last) {
+			newLast = newLast.getNext();
+		}
+		
+		/* assign new last element */
+		newLast.setNext(null);				
+		this.last = newLast;
+		size--;
+	}
+
+	public void removeFirst() {
+		if (this.isEmpty()) {
+			return;
+		}
+		
+		/* one element: clear list and return */ 
+		if (this.size() == 1) {
+			this.clear();
+			return;
+		}
+		
+		/* remove first element */
+		this.first = this.first.getNext();
+		size--;
+	}
+
+	public Document getFirst() {
+		if (this.isEmpty()) {
 			return null;
 		}
 		
-		DocumentCollectionCell temp = this.first;
-		while (temp != null)	{
-			for (int i = 0; i < temp.getDocument().getWordCounts().size(); i++)	{
-				if (wca.getIndex(temp.getDocument().getWordCounts().getWord(i)) < 0)	{
-					wca.add(temp.getDocument().getWordCounts().getWord(i), 0);
-				}
-			}
-			
-			temp = temp.getNext();
+		return this.first.getDocument();
+	}
+
+	public Document getLast() {
+		if (this.isEmpty()) {
+			return null;
 		}
 		
-		return wca;
+		return this.last.getDocument();
 	}
-	
-	private void addWordsToDocumentsWithCountZero()	{
-		WordCountArray allWords = this.allWords();
+
+	private void clear() {
+		this.first = null;
+		this.last = null;
+		this.size = 0;
+	}
+
+	public boolean isEmpty() {
+		return this.size == 0;
+	}
+
+	public int size() {
+		return this.size;
+	}
+
+	public Document get(int index) {
+		if (index < 0 || index >= this.size) {
+			return null;
+		}
 		
-		if (allWords == null)	{
+		return getDocumentCollectionCell(index).getDocument();		
+	}
+
+	private WordCountArray allWords() {		
+		/* loop over all documents to create a WordCountArray
+		   containing *all* words of all documents */ 		 
+		DocumentCollectionCell tmp = this.first;
+		
+		WordCountArray allWords = new WordCountArray(0);
+		
+		while (tmp != null) {
+			Document doc = tmp.getDocument();
+			WordCountArray wca = doc.getWordCounts();
+					
+			for (int i = 0; i < wca.size(); i++) {
+				allWords.add(wca.getWord(i), 0);
+			}
+			
+			tmp = tmp.getNext();
+		}
+		
+		return allWords;
+	}
+
+	public void match(String query) {
+		if (this.isEmpty()) {
 			return;
 		}
 		
-		DocumentCollectionCell temp = this.first;
-		while (temp != null)	{
-			for (int i = 0; i < allWords.size(); i++)	{
-				if (temp.getDocument().getWordCounts().getIndex(allWords.getWord(i)) < 0)	{
-					temp.getDocument().getWordCounts().add(allWords.getWord(i), 0);
-				}
-			}
-			
-			temp = temp.getNext();
+		if (query == null || query.equals("")) {
+			return;
 		}
-	}
-	
-	public void match(String query)	{
-		Document docQuery = new Document(null, null, null, null, null, query);
 		
-		this.addLast(docQuery);
+		/* add query to collection as document */
+		Document queryDocument = new Document("", "", "", null, null, query);
+		this.addFirst(queryDocument);
 		
+		
+		/* add every word to every document with count 0 */
 		this.addWordsToDocumentsWithCountZero();
 		
-		DocumentCollectionCell temp = this.first;
-		while (temp != null)	{
-			temp.setSimilarity(docQuery.getWordCounts().similarity(temp.getDocument().getWordCounts()));
-			temp = temp.getNext();
+		/* sort all WordCountArrays of all documents */				
+		DocumentCollectionCell tmp = this.first;		
+		while (tmp != null) {
+			tmp.getDocument().getWordCounts().sort();
+			tmp = tmp.getNext();
 		}
 		
-		this.removeLast();
+		
+		/* calculate similarities with query document */
+		tmp = this.first.getNext();		
+		while (tmp != null) {
+			tmp.setQuerySimilarity(tmp.getDocument().getWordCounts().similarity(queryDocument.getWordCounts()));
+			tmp = tmp.getNext();
+		}
+		
+		/* remove the query we added in the beginning */
+		this.removeFirst();
+		
 		this.sortBySimilarity();
 	}
-	
-	public double getQuerySimilarity(int index)	{
-		if (index >= this.size())	{
-			return -1;
-		}
-		if (index < 0)	{
-			return -1;
-		}
+
+	private void swap(DocumentCollectionCell cell1, DocumentCollectionCell cell2) {
+		/* swap both contained the contained document and the corresponding similarity */
 		
-		DocumentCollectionCell temp = this.first;
+		Document tmpDoc = cell1.getDocument();
+		double tmpSim = cell1.getQuerySimilarity();
 		
-		for (int i = 0; i < (index - 1); i++)	{
-			temp = temp.getNext();
-		}
+		cell1.setDocument(cell2.getDocument());
+		cell1.setQuerySimilarity(cell2.getQuerySimilarity());
 		
-		return temp.getSimilarity();
+		cell2.setDocument(tmpDoc);
+		cell2.setQuerySimilarity(tmpSim);
 	}
-	
-	private void sortBySimilarity()	{
-		if (isEmpty() || this.size() < 2)	{
-			return;
-		}
-		
-		DocumentCollectionCell prev = this.first;
-		DocumentCollectionCell center = this.first;
-		DocumentCollectionCell post = this.first.getNext();
-		
-		DocumentCollectionCell help1 = null;
-		DocumentCollectionCell help2 = null;
-		
-		for (int i = 0; i < this.size(); i++)	{
-			do	{
-				if (center.getSimilarity() < post.getSimilarity())	{
-					help1 = center;
-					help2 = post.getNext();
-					
-					prev.setNext(center.getNext());
-					post.setNext(help1);
-					center.setNext(help2);
-				}
-				if (center != this.first)	{
-					prev = prev.getNext();
-				}
-				center = center.getNext();
-				post = post.getNext();
-			}	while(post != null);
+
+	private void sortBySimilarity() {
+		for (int pass = 1; pass < this.size(); pass++) {
 			
-			center = this.first;
-			prev = this.first;
-			post = this.first.getNext();
+			DocumentCollectionCell actCell = this.first;
+			
+			for (int i = 0; i < this.size() - pass; i++) {			
+				/* swap content of cells, if cells are in wrong order */
+				if (actCell.getQuerySimilarity() < actCell.getNext().getQuerySimilarity()) {
+					swap(actCell, actCell.getNext());
+				}
+				
+				actCell = actCell.getNext();
+			}
 		}
+	}
+
+	private void addWordsToDocumentsWithCountZero() {
+		WordCountArray allWords = this.allWords();
+		
+		DocumentCollectionCell tmp = this.first;
+		
+		while (tmp != null) {
+			for (int j = 0; j < allWords.size(); j++) {
+				String word = allWords.getWord(j);
+				
+				tmp.getDocument().getWordCounts().add(word, 0);
+			}
+			
+			tmp = tmp.getNext();
+		}	
+	}
+
+	public double getQuerySimilarity(int index) {
+		if (index < 0 || index >= this.size()) {
+			return -1;
+		}
+		
+		return this.getDocumentCollectionCell(index).getQuerySimilarity();
+	}
+
+	private DocumentCollectionCell getDocumentCollectionCell(int index) {
+		if (index < 0 || index >= this.size()) {
+			return null;
+		}
+		
+		/* navigate to corresponding cell at the index */
+		
+		DocumentCollectionCell tmp = this.first;		
+		
+		int i = 0;
+		while (i < index) {
+			tmp = tmp.getNext();
+			i++;
+		}
+		
+		return tmp;
+	}
+
+	public String toString() {
+		if (this.size() == 0) {
+			return "[]";
+		}
+
+		if (this.size() == 1) {
+			return "[" + this.get(0).getTitle() + "]";
+		}
+
+		String res = "[";
+		for (int i = 0; i < this.size() - 1; i++) {
+			res += this.get(i).getTitle() + ", ";
+		}
+		res += this.get(this.size() - 1).getTitle() + "]";
+		return res;
 	}
 }

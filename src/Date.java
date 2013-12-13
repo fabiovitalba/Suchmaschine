@@ -11,8 +11,9 @@ public class Date {
 		this.month = Terminal.TODAYS_MONTH;
 		this.year = Terminal.TODAYS_YEAR;
 	}
-
+	
 	public Date(int day, int month, int year) {
+		/* use setter-methods, since they check for invalid values */
 		this.setYear(year);
 		this.setMonth(month);
 		this.setDay(day);
@@ -33,7 +34,7 @@ public class Date {
 	
 	private int daysSince1900() {
 		int days = 0;
-
+		
 		// all former years
 		for (int i = 1900; i < this.year; i++) {
 			days += this.daysInYear(i);
@@ -87,7 +88,7 @@ public class Date {
 			}
 		}
 	}
-	
+
 	private int daysInMonth(int month, int year) {
 		switch(month) {
 			case 1:
@@ -109,7 +110,7 @@ public class Date {
 		
 		return -1;
 	}
-	
+
 	private int daysinFebruary(int year) {		
 		if (year % 4 != 0) {
 			return 28;
@@ -121,11 +122,11 @@ public class Date {
 		
 		return 29;
 	}
-	
+
 	public String toString() {
 		return this.day + "/" + this.month + "/" + this.year;
 	}
-	
+
 	public void setDay(int day) {
 		if (day < 1) {
 			this.day = 1;
@@ -135,7 +136,7 @@ public class Date {
 			this.day = day;
 		}
 	}
-	
+
 	public void setMonth(int month) {
 		if (month < 1) {
 			this.month = 1;
@@ -144,9 +145,12 @@ public class Date {
 		} else {
 			this.month = month;
 		}
+		
+		/* To avoid that the day of this date gets invalid,
+		 * execute the setDay() method with the current day */
 		this.setDay(this.day);
 	}
-	
+
 	public void setYear(int year) {
 		if (year < 1900) {
 			this.year = 1900;
@@ -155,22 +159,23 @@ public class Date {
 		} else {
 			this.year = year;
 		}
+		
+		/* To avoid that the day of this date gets invalid,
+		 * execute the setDay() method with the current day */
 		this.setDay(this.day);
 	}
-	
-	public boolean equals(Date date)	{
-		if (date == null)	{
+
+	public boolean equals(Date date) {
+		if (this == date) {
+			return true;
+		}
+		
+		if (date == null) {
 			return false;
 		}
-		if (this.getDay() != date.getDay())	{
-			return false;
-		}
-		if (this.getMonth() != date.getMonth())	{
-			return false;
-		}
-		if (this.getYear() != date.getYear())	{
-			return false;
-		}
-		return true;
+		
+		return this.day == date.day 
+			&& this.month == date.month 
+			&& this.year == date.year;
 	}
 }

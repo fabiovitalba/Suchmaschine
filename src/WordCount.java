@@ -19,7 +19,6 @@ public class WordCount {
 		this.setCount(count);
 	}
 
-	//Methods
 	public String getWord() {
 		return word;
 	}
@@ -35,29 +34,23 @@ public class WordCount {
 			this.count = count;
 		}
 	}
-	
+
 	public int incrementCount() {
 		this.count++;
 		return this.count;
 	}
-	
+
 	public int incrementCount(int n) {
 		if (n > 0) {
 			this.count += n;
 		}
 		return this.count;
 	}
-	
-	public boolean equals(WordCount wc)	{
-		if (wc == null)	{
+
+	public boolean equals(WordCount wordCount) {
+		if(wordCount == null)
 			return false;
-		}
-		if (!this.getWord().equals(wc.getWord()))	{
-			return false;
-		}
-		if (this.getCount() != wc.getCount())	{
-			return false;
-		}
-		return true;
+		return this.count == wordCount.count 
+			&& this.word.equals(wordCount.word);
 	}
 }

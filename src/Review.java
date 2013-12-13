@@ -6,6 +6,7 @@ public class Review {
 	private String language;
 	private Date releaseDate;
 	private int rating;
+	
 	public static final int MAX_RATING = 10;
 	public static final int MIN_RATING = 0;
 	
@@ -71,25 +72,23 @@ public class Review {
 		}
 	}
 	
-	public boolean equals(Review review)	{
-		if (review == null)	{
+	public boolean equals(Review review) {
+		if (this == review) {
+			return true;
+		}
+		
+		if (review == null) {
 			return false;
 		}
-		if (!this.getAuthor().equals(review.getAuthor()))	{
-			return false;
-		}
-		if (!this.getReviewedDocument().equals(review.getReviewedDocument()))	{
-			return false;
-		}
-		if (!this.getLanguage().equals(review.getLanguage()))	{
-			return false;
-		}
-		if (!this.getReleaseDate().equals(review.getReleaseDate()))	{
-			return false;
-		}
-		if (this.getRating() != review.getRating())	{
-			return false;
-		}
-		return true;
+		
+		return 
+			this.language.equals(review.language) 
+			&& this.rating == review.rating 
+			&& ((this.author != null && this.author.equals(review.author)) 
+				|| (this.author == null && review.author == null)) 
+			&& ((this.releaseDate != null && this.releaseDate.equals(review.releaseDate)) 
+				|| (this.releaseDate == null && review.releaseDate == null)) 
+			&& ((this.reviewedDocument != null && this.reviewedDocument.equals(review.reviewedDocument)) 
+				|| (this.reviewedDocument == null && review.reviewedDocument == null));						
 	}
 }
