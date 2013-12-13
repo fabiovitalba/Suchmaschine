@@ -5,8 +5,7 @@ import java.io.InputStreamReader;
 
 /**
  * Diese Klasse stellt einige einfache Methoden zur Ein- und Ausgabe auf einem
- * Terminal zur Verf&uuml;gung.
- * 
+ * Terminal zur Verfügung
  */
 public final class Terminal {
 
@@ -20,7 +19,7 @@ public final class Terminal {
 
     /** Allgemeine Fehlermeldung */
     private static final String ERROR = "Error!";
- 
+
     /** Fehlermeldung fuer ungueltige byte-Eingabe */
     private static final String ERROR_INVALID_BYTE =
         "Ungueltige Byte-Zahl! (Nochmal eingeben) ";
