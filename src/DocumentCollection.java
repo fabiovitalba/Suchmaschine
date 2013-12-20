@@ -1,9 +1,9 @@
 
 public class DocumentCollection {
 	//Attributes
-	private DocumentCollectionCell first;
-	private DocumentCollectionCell last;
-	private int size;
+	protected DocumentCollectionCell first;
+	protected DocumentCollectionCell last;
+	protected int size;
 	
 	//Constructors
 	public DocumentCollection() {

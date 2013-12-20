@@ -2,6 +2,11 @@
 public class LinkedDocument extends Document {
 	//Attributes
 	private String id;
+	private String[] links;
+	private LinkedDocumentCollection outgoingLinks;
+	private LinkedDocumentCollection incomingLinks;
+	
+	
 	
 	//Constructors
 	public LinkedDocument(String title, String language, String description,
@@ -9,6 +14,8 @@ public class LinkedDocument extends Document {
 		//TODO
 		super(title, language, description, releaseDate, author, text);
 		this.setId(id);
+		this.links = findOutgoingIDs(text);
+		this.setLinkCountZero();
 	}
 
 	//Methods
@@ -16,24 +23,59 @@ public class LinkedDocument extends Document {
 		this.id = id;
 	}
 	
+	public String getId()	{
+		return this.id;
+	}
+	
 	public boolean equals(Document doc)	{
-		//TODO
+		if (doc instanceof LinkedDocument)	{
+			return this.id.equals(((LinkedDocument)doc).getId());
+		}
+		return super.equals(doc);
 	}
 	
 	private String[] findOutgoingIDs(String text)	{
-		//TODO
+		Document texts = new Document("", "", "", null, null, text);
+		int linkSize = 1;
+		String[] links = new String[linkSize];
+		String tmpWord;
+		
+		for (int i = 0; i < texts.getWordCounts().size(); i++)	{
+			tmpWord = texts.getWordCounts().getWord(i);
+			if (tmpWord.contains("link:"))	{
+				links[linkSize - 1] = tmpWord.substring(5, (tmpWord.length() - 1));
+				linkSize++;
+				String[] tmp = links;
+				links = new String[linkSize];
+				for (int j = 0; j < (linkSize - 1); j++)	{
+					links[j] = tmp[j];
+				}
+			}
+		}
+		
+		return links;
 	}
 	
 	private void setLinkCountZero()	{
-		//TODO
+		for (int i = 0; i < this.getWordCounts().size(); i++)	{
+			if (this.getWordCounts().getWord(i).contains("link:"))	{
+				this.getWordCounts().setCount(i, 0);
+			}
+		}
 	}
 	
 	public void addIncomingLink(LinkedDocument incomingLink)	{
-		//TODO
+		if (incomingLink == null)	{
+			return;
+		}
+		if (incomingLink.equals(this))	{
+			return;
+		}
+		this.incomingLinks.addLast(incomingLink);
 	}
 	
 	public static LinkedDocument createLinkedDocumentFromFile(String fileName)	{
-		//TODO
+		return null;
 	}
 	
 	private void createOutgoingDocumentCollection()	{
@@ -41,10 +83,10 @@ public class LinkedDocument extends Document {
 	}
 	
 	public LinkedDocumentCollection getOutgoingLinks()	{
-		//TODO
+		return null;
 	}
 	
 	public LinkedDocumentCollection getIncomingLinks()	{
-		//TODO
+		return null;
 	}
 }
