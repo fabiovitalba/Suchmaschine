@@ -152,7 +152,7 @@ public class Document {
 		this.author = author;
 	}
 
-	protected static String[] tokenize(String text) {
+	private static String[] tokenize(String text) {
 		int wordCount = 0;
 		
 		/* count spaces in the text */

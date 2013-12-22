@@ -6,16 +6,14 @@ public class LinkedDocument extends Document {
 	private LinkedDocumentCollection outgoingLinks;
 	private LinkedDocumentCollection incomingLinks;
 	
+	
+	
 	//Constructors
 	public LinkedDocument(String title, String language, String description,
-			Date releaseDate, Author author, String text, String id) {
+			Date releaseDate, Author author, String text) {
 		//TODO
 		super(title, language, description, releaseDate, author, text);
 		this.setId(id);
-		
-		this.outgoingLinks = new LinkedDocumentCollection();
-		this.incomingLinks = new LinkedDocumentCollection();
-		
 		this.links = findOutgoingIDs(text);
 		this.setLinkCountZero();
 	}
@@ -25,25 +23,27 @@ public class LinkedDocument extends Document {
 		this.id = id;
 	}
 	
-	public String getID()	{
+	public String getId()	{
 		return this.id;
 	}
 	
 	public boolean equals(Document doc)	{
 		if (doc instanceof LinkedDocument)	{
-			return this.id.equals(((LinkedDocument)doc).getID());
+			return this.id.equals(((LinkedDocument)doc).getId());
 		}
 		return super.equals(doc);
 	}
 	
 	private String[] findOutgoingIDs(String text)	{
-		String[] texts = tokenize(text);
+		Document texts = new Document("", "", "", null, null, text);
 		int linkSize = 1;
 		String[] links = new String[linkSize];
+		String tmpWord;
 		
-		for (int i = 0; i < texts.length; i++)	{
-			if (texts[i].contains("link:"))	{
-				links[linkSize - 1] = texts[i].substring(5, texts[i].length());
+		for (int i = 0; i < texts.getWordCounts().size(); i++)	{
+			tmpWord = texts.getWordCounts().getWord(i);
+			if (tmpWord.contains("link:"))	{
+				links[linkSize - 1] = tmpWord.substring(5, (tmpWord.length() - 1));
 				linkSize++;
 				String[] tmp = links;
 				links = new String[linkSize];
@@ -75,44 +75,18 @@ public class LinkedDocument extends Document {
 	}
 	
 	public static LinkedDocument createLinkedDocumentFromFile(String fileName)	{
-		if (fileName == null)	{
-			return null;
-		}
-		
-		String[] file = Terminal.readFile(fileName);
-		
-		if ((file == null) || (file.length < 2))	{
-			return null;
-		}
-		
-		LinkedDocument ld = new LinkedDocument(file[0], "", "", null, null, file[1], fileName);
-		
-		return ld;
+		return null;
 	}
 	
 	private void createOutgoingDocumentCollection()	{
-		if (this.links.length < 1)	{
-			return;
-		}
-		
-		for (int i = 0; i < this.links.length; i++)	{
-			if (!this.getID().equals(this.links[i]))	{
-				this.outgoingLinks.addLast(createLinkedDocumentFromFile(this.links[i]));
-			}
-		}
+		//TODO
 	}
 	
 	public LinkedDocumentCollection getOutgoingLinks()	{
-		this.createOutgoingDocumentCollection();
-		
-		if (this.outgoingLinks.isEmpty())	{
-			return null;
-		}	else	{
-			return this.outgoingLinks;
-		}
+		return null;
 	}
 	
 	public LinkedDocumentCollection getIncomingLinks()	{
-		return this.incomingLinks;
+		return null;
 	}
 }

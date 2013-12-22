@@ -222,7 +222,7 @@ public class DocumentCollection {
 		}
 		
 		/* add query to collection as document */
-		LinkedDocument queryDocument = new LinkedDocument("", "", "", null, null, query, "query");
+		Document queryDocument = new Document("", "", "", null, null, query);
 		this.addFirst(queryDocument);
 		
 		
@@ -240,7 +240,7 @@ public class DocumentCollection {
 		/* calculate similarities with query document */
 		tmp = this.first.getNext();		
 		while (tmp != null) {
-			tmp.setQuerySimilarity(tmp.getDocument().getWordCounts().similarity(queryDocument.getWordCounts(), this));
+			tmp.setQuerySimilarity(tmp.getDocument().getWordCounts().similarity(queryDocument.getWordCounts()));
 			tmp = tmp.getNext();
 		}
 		
@@ -336,22 +336,5 @@ public class DocumentCollection {
 		}
 		res += this.get(this.size() - 1).getTitle() + "]";
 		return res;
-	}
-	
-	public int noOfDocumentsContainingWord(String word)	{
-		DocumentCollectionCell tmp = this.first;
-		int docCount = 0;
-		
-		while (tmp != null)	{
-			WordCountArray wca = tmp.getDocument().getWordCounts();
-			
-			if (wca.getCount(wca.getIndex(word)) > 0)	{
-				docCount++;
-			}
-			
-			tmp = tmp.getNext();
-		}
-		
-		return docCount;
 	}
 }
