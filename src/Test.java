@@ -2,7 +2,7 @@
 public class Test {
 	
 	public static void main(String[] args) {		
-		DocumentCollection dc = new DocumentCollection();
+		LinkedDocumentCollection dc = new LinkedDocumentCollection();
 		String command;
 		
 		boolean exit = false;
@@ -25,7 +25,7 @@ public class Test {
 					String title = titleAndText.substring(0, separator);
 					String text = titleAndText.substring(separator + 1);
 					
-					dc.addLast(new Document(title, "", "", null, null, text));
+					dc.addLast(new LinkedDocument(title, "", "", null, null, text, title));
 				}
 			}
 			else if (command.startsWith("list")) {
@@ -65,6 +65,17 @@ public class Test {
 						System.out.println(doc.getTitle() + ": " + count + "x ");
 					}
 				}
+			}
+			else if (command.startsWith("crawl ")) {
+				DocumentCollectionCell tmp = dc.crawl().first;
+				
+				while (tmp != null)	{
+					dc.addLast(tmp.getDocument());
+					
+					tmp = tmp.getNext();
+				}
+				
+				System.out.println("Kommando crawl wurde ausgefuehrt. Die neuen Dokumente wurden hinzugefuegt.");
 			}
 		}
 	}

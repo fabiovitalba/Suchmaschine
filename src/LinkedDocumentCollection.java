@@ -4,18 +4,19 @@ public class LinkedDocumentCollection extends DocumentCollection {
 	
 	
 	//Constructors
-	
+	public LinkedDocumentCollection()	{
+		super();
+	}
 	
 	//Methods
 	public void addFirst(Document doc)	{
-		//TODO
 		if (doc == null) {
 			return;
 		}
 		if (!(doc instanceof LinkedDocument))	{
 			return;
 		}
-		if (this.containsID(((LinkedDocument)doc).getId()))	{
+		if (this.containsID(((LinkedDocument)doc).getID()))	{
 			return;
 		}
 		
@@ -30,14 +31,13 @@ public class LinkedDocumentCollection extends DocumentCollection {
 	}
 	
 	public void addLast(Document doc)	{
-		//TODO
 		if (doc == null) {
 			return;
 		}
 		if (!(doc instanceof LinkedDocument))	{
 			return;
 		}
-		if (this.containsID(((LinkedDocument)doc).getId()))	{
+		if (this.containsID(((LinkedDocument)doc).getID()))	{
 			return;
 		}
 		
@@ -56,9 +56,10 @@ public class LinkedDocumentCollection extends DocumentCollection {
 	
 	public boolean containsID(String id)	{
 		DocumentCollectionCell tmp = this.first;
+		
 		for (int i = 0; i < this.size(); i++)	{
 			while (tmp != null)	{
-				if (((LinkedDocument)tmp.getDocument()).getId().equals(id))	{
+				if (((LinkedDocument)tmp.getDocument()).getID().equals(id))	{
 					return true;
 				}
 				tmp = tmp.getNext();
@@ -70,14 +71,49 @@ public class LinkedDocumentCollection extends DocumentCollection {
 	}
 	
 	public void calculateIncomingLinks()	{
-		//TODO
+		if (this.size() < 2)	{
+			return;
+		}
+		
+		DocumentCollectionCell tmp = this.first;
+		
+		while (tmp != null)	{
+			//For each Document Listed
+			DocumentCollectionCell help = ((LinkedDocument)tmp.getDocument()).getOutgoingLinks().first;
+			
+			for (int i = 0; i < ((LinkedDocument)tmp.getDocument()).getOutgoingLinks().size(); i++)	{
+				((LinkedDocument)help.getDocument()).addIncomingLink((LinkedDocument)tmp.getDocument());
+				help = help.getNext();
+			}
+			
+			tmp = tmp.getNext();
+		}
 	}
 	
 	public LinkedDocumentCollection crawl()	{
-		return null;
+		LinkedDocumentCollection resultCollection = new LinkedDocumentCollection();
+		
+		this.crawl(resultCollection);
+		
+		return resultCollection;
 	}
 	
 	private void crawl(LinkedDocumentCollection resultCollection)	{
-		//TODO
+		
+		if (resultCollection.isEmpty())	{
+			resultCollection = this;
+		}
+		
+		DocumentCollectionCell tmp = resultCollection.first;
+		
+		while (tmp != null)	{
+			if (resultCollection.containsID(((LinkedDocument)tmp.getDocument()).getID()))	{
+				resultCollection.addLast(tmp.getDocument());
+			}
+			
+			resultCollection.crawl(((LinkedDocument)tmp.getDocument()).getOutgoingLinks());
+			
+			tmp = tmp.getNext();
+		}
 	}
 }

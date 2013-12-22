@@ -3,6 +3,8 @@ public class WordCount {
 	//Attributes
 	private String word;
 	private int count;
+	private double weight;
+	private double normalizedWeight;
 	
 	//Constructors
 	public WordCount(String word) {
@@ -53,4 +55,21 @@ public class WordCount {
 		return this.count == wordCount.count 
 			&& this.word.equals(wordCount.word);
 	}
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
+	public double getNormalizedWeight() {
+		return normalizedWeight;
+	}
+
+	public void setNormalizedWeight(double normalizedWeight) {
+		this.normalizedWeight = normalizedWeight;
+	}
+	
 }
