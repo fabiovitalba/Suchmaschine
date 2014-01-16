@@ -42,7 +42,7 @@ public class LinkedDocument extends Document {
 		String[] links = new String[linkSize];
 		
 		for (int i = 0; i < texts.length; i++)	{
-			if (texts[i].contains("link:"))	{
+			if (texts[i].startsWith("link:"))	{
 				links[linkSize - 1] = texts[i].substring(5, texts[i].length());
 				linkSize++;
 				String[] tmp = links;
@@ -58,7 +58,7 @@ public class LinkedDocument extends Document {
 	
 	private void setLinkCountZero()	{
 		for (int i = 0; i < this.getWordCounts().size(); i++)	{
-			if (this.getWordCounts().getWord(i).contains("link:"))	{
+			if (this.getWordCounts().getWord(i).startsWith("link:"))	{
 				this.getWordCounts().setCount(i, 0);
 			}
 		}
