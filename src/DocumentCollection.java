@@ -1,18 +1,15 @@
 
 public class DocumentCollection {
-	//Attributes
-	protected DocumentCollectionCell first;
-	protected DocumentCollectionCell last;
-	protected int size;
+	private DocumentCollectionCell first;
+	private DocumentCollectionCell last;
+	private int size;
 	
-	//Constructors
 	public DocumentCollection() {
 		this.first = null;
 		this.last = null;
 		this.size = 0;
 	}
 	
-	//Methods
 	public void addFirst(Document doc) {
 		if (doc == null) {
 			return;
@@ -29,7 +26,7 @@ public class DocumentCollection {
 		
 		size++;
 	}
-
+	
 	public void addLast(Document doc) {
 		if (doc == null) {
 			return;
@@ -47,7 +44,7 @@ public class DocumentCollection {
 		
 		size++;
 	}
-
+	
 	public int indexOf(Document doc) {
 		if (doc == null || this.isEmpty()) {
 			return -1;
@@ -69,11 +66,11 @@ public class DocumentCollection {
 		
 		return -1;
 	}
-
+	
 	public boolean contains(Document doc) {
 		return (this.indexOf(doc) != -1);
 	}
-
+	
 	public boolean remove(int index) {
 		if (index < 0 || index >= this.size()) {
 			return false;
@@ -112,7 +109,7 @@ public class DocumentCollection {
 		prev.setNext(actual.getNext());
 		size--;
 		return true;
-	}
+	}	
 	
 	public void removeLast() {
 		if (this.isEmpty()) {
@@ -136,7 +133,7 @@ public class DocumentCollection {
 		this.last = newLast;
 		size--;
 	}
-
+	
 	public void removeFirst() {
 		if (this.isEmpty()) {
 			return;
@@ -152,7 +149,7 @@ public class DocumentCollection {
 		this.first = this.first.getNext();
 		size--;
 	}
-
+	
 	public Document getFirst() {
 		if (this.isEmpty()) {
 			return null;
@@ -160,7 +157,7 @@ public class DocumentCollection {
 		
 		return this.first.getDocument();
 	}
-
+	
 	public Document getLast() {
 		if (this.isEmpty()) {
 			return null;
@@ -168,21 +165,21 @@ public class DocumentCollection {
 		
 		return this.last.getDocument();
 	}
-
+	
 	private void clear() {
 		this.first = null;
 		this.last = null;
 		this.size = 0;
 	}
-
+	
 	public boolean isEmpty() {
 		return this.size == 0;
 	}
-
+	
 	public int size() {
 		return this.size;
 	}
-
+	
 	public Document get(int index) {
 		if (index < 0 || index >= this.size) {
 			return null;
@@ -190,7 +187,7 @@ public class DocumentCollection {
 		
 		return getDocumentCollectionCell(index).getDocument();		
 	}
-
+	
 	private WordCountArray allWords() {		
 		/* loop over all documents to create a WordCountArray
 		   containing *all* words of all documents */ 		 
@@ -211,7 +208,7 @@ public class DocumentCollection {
 		
 		return allWords;
 	}
-
+	
 	public void match(String query) {
 		if (this.isEmpty()) {
 			return;
@@ -221,13 +218,16 @@ public class DocumentCollection {
 			return;
 		}
 		
-		/* add query to collection as document */
-		LinkedDocument queryDocument = new LinkedDocument("", "", "", null, null, query, "query");
+		/* add query to collection as document;
+		 * changed with Uebung 4: Must be a LinkedDocument, since Documents are not added to a LinkedDocumentCollection
+		 */
+		LinkedDocument queryDocument = new LinkedDocument("", "", "", null, null, query, "");
 		this.addFirst(queryDocument);
 		
 		
 		/* add every word to every document with count 0 */
 		this.addWordsToDocumentsWithCountZero();
+		
 		
 		/* sort all WordCountArrays of all documents */				
 		DocumentCollectionCell tmp = this.first;		
@@ -238,8 +238,9 @@ public class DocumentCollection {
 		
 		
 		/* calculate similarities with query document */
-		tmp = this.first.getNext();		
+		tmp = this.first.getNext();
 		while (tmp != null) {
+			/* added parameter "this" with Uebung 4 to calculate complex similarity */ 
 			tmp.setQuerySimilarity(tmp.getDocument().getWordCounts().similarity(queryDocument.getWordCounts(), this));
 			tmp = tmp.getNext();
 		}
@@ -262,10 +263,11 @@ public class DocumentCollection {
 		cell2.setDocument(tmpDoc);
 		cell2.setQuerySimilarity(tmpSim);
 	}
-
+	
 	private void sortBySimilarity() {
 		for (int pass = 1; pass < this.size(); pass++) {
 			
+			/* variable to loop over array */
 			DocumentCollectionCell actCell = this.first;
 			
 			for (int i = 0; i < this.size() - pass; i++) {			
@@ -278,7 +280,7 @@ public class DocumentCollection {
 			}
 		}
 	}
-
+	
 	private void addWordsToDocumentsWithCountZero() {
 		WordCountArray allWords = this.allWords();
 		
@@ -294,7 +296,7 @@ public class DocumentCollection {
 			tmp = tmp.getNext();
 		}	
 	}
-
+	
 	public double getQuerySimilarity(int index) {
 		if (index < 0 || index >= this.size()) {
 			return -1;
@@ -302,7 +304,7 @@ public class DocumentCollection {
 		
 		return this.getDocumentCollectionCell(index).getQuerySimilarity();
 	}
-
+	
 	private DocumentCollectionCell getDocumentCollectionCell(int index) {
 		if (index < 0 || index >= this.size()) {
 			return null;
@@ -320,7 +322,8 @@ public class DocumentCollection {
 		
 		return tmp;
 	}
-
+	
+	@Override
 	public String toString() {
 		if (this.size() == 0) {
 			return "[]";
@@ -338,20 +341,28 @@ public class DocumentCollection {
 		return res;
 	}
 	
-	public int noOfDocumentsContainingWord(String word)	{
-		DocumentCollectionCell tmp = this.first;
-		int docCount = 0;
-		
-		while (tmp != null)	{
-			WordCountArray wca = tmp.getDocument().getWordCounts();
-			
-			if (wca.getCount(wca.getIndex(word)) > 0)	{
-				docCount++;
-			}
-			
-			tmp = tmp.getNext();
+	public int noOfDocumentsContainingWord(String word) {
+		if (word == null) {
+			return 0;
 		}
 		
-		return docCount;
+		
+		int count = 0;
+		
+		/* loop over all documents and check if word is contained */
+		for (int i = 0; i < this.size(); i++) {
+			WordCountArray wca = this.get(i).getWordCounts();	
+			
+			if (wca != null) {			
+				int index = wca.getIndex(word);
+				
+				/* increase count only if count of this word in the WordCountArray is greater than 0 */
+				if (index != -1 && wca.getCount(index) > 0) {
+					count++;
+				}
+			}
+		}
+		
+		return count;
 	}
 }

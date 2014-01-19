@@ -1,7 +1,4 @@
-/**
- * An immutable singly-linked list.
- * @param <T> the type of the list elements
- */
+
 class List<T> {
 	T head;
 	List<T> tail;
@@ -19,17 +16,9 @@ class List<T> {
 
 public class Muenzen {
 
-	/**
-	 * Counts the number of possibilities to get a total value of exactly {@code max} using
-	 * only the values given in {@code remainingCoins}.
-	 * @param sum the accumulated value
-	 * @param max the maximum value
-	 * @param remainingCoins a list of coins
-	 * @return the number of possibilities
-	 */
 	static int numPossibilities(int sum, int max, List<Integer> remainingCoins) {
 //		TODO
-		}
+		return 0;
 	}
 	
 	public static void main(String[] args) {
@@ -38,7 +27,7 @@ public class Muenzen {
 				List.node(20, List.node(50, List.node(100,  List.node(200, null))))))));
 
 		// For example, the number of possibilities to get a total value of 175 is 41454.
-		int result = ??
+		int result = 0;
 		
 		System.out.println("There are " + result + " number of ways.");
 	}

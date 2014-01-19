@@ -1,118 +1,147 @@
 
 public class LinkedDocument extends Document {
-	//Attributes
-	private String id;
-	private String[] links;
+	public static final String LINK_PREFIX = "link:";
+	
+	private final String id;
 	private LinkedDocumentCollection outgoingLinks;
 	private LinkedDocumentCollection incomingLinks;
+	private String[] outgoingIDs;
 	
-	//Constructors
 	public LinkedDocument(String title, String language, String description,
 			Date releaseDate, Author author, String text, String id) {
-		//TODO
 		super(title, language, description, releaseDate, author, text);
-		this.setId(id);
 		
-		this.outgoingLinks = new LinkedDocumentCollection();
+		this.id = id;
 		this.incomingLinks = new LinkedDocumentCollection();
-		
-		this.links = findOutgoingIDs(text);
+
+		this.outgoingIDs = this.findOutgoingIDs(text);
+		this.outgoingLinks = null;
 		this.setLinkCountZero();
 	}
+	
+	public static LinkedDocument createLinkedDocumentFromFile(String fileName) {
+		String[] fileContent = Terminal.readFile(fileName);
+		
+		if (fileContent != null && fileContent.length >= 2) {		
+			String title = fileContent[0]; 
+			String text = fileContent[1];
 
-	//Methods
-	public void setId(String id)	{
-		this.id = id;
+			return new LinkedDocument(title, "", "", null, null, text, fileName);
+		}
+		else {
+			return null;
+		}
+	}
+
+	private void setLinkCountZero() {
+		WordCountArray wca = this.getWordCounts();
+		
+		for (int i = 0; i < wca.size(); i++) {
+			if (wca.getWord(i).startsWith(LinkedDocument.LINK_PREFIX)) {
+				wca.setCount(i, 0);
+			}
+		}
 	}
 	
-	public String getID()	{
+	@Override
+	public boolean equals(Document doc) {
+		if (doc instanceof LinkedDocument) { 
+			return this.id.equals(((LinkedDocument) doc).id);
+		}
+		else {
+			return super.equals(doc);
+		}
+	}
+	
+	public String getID() {
 		return this.id;
 	}
 	
-	public boolean equals(Document doc)	{
-		if (doc instanceof LinkedDocument)	{
-			return this.id.equals(((LinkedDocument)doc).getID());
-		}
-		return super.equals(doc);
-	}
-	
-	private String[] findOutgoingIDs(String text)	{
-		String[] texts = tokenize(text);
-		int linkSize = 1;
-		String[] links = new String[linkSize];
+	private void createOutgoingDocumentCollection() {
+		this.outgoingLinks = new LinkedDocumentCollection();
 		
-		for (int i = 0; i < texts.length; i++)	{
-			if (texts[i].startsWith("link:"))	{
-				links[linkSize - 1] = texts[i].substring(5, texts[i].length());
-				linkSize++;
-				String[] tmp = links;
-				links = new String[linkSize];
-				for (int j = 0; j < (linkSize - 1); j++)	{
-					links[j] = tmp[j];
-				}
-			}
-		}
-		
-		return links;
-	}
-	
-	private void setLinkCountZero()	{
-		for (int i = 0; i < this.getWordCounts().size(); i++)	{
-			if (this.getWordCounts().getWord(i).startsWith("link:"))	{
-				this.getWordCounts().setCount(i, 0);
+		for (int i = 0; i < this.outgoingIDs.length; i++) {
+			LinkedDocument newDoc = LinkedDocument.createLinkedDocumentFromFile(this.outgoingIDs[i]);
+			
+			/* do not add links to this page (page pointing to itself) */
+			if (!this.equals(newDoc)) {
+				this.outgoingLinks.addLast(newDoc);
 			}
 		}
 	}
 	
-	public void addIncomingLink(LinkedDocument incomingLink)	{
-		if (incomingLink == null)	{
-			return;
+	public LinkedDocumentCollection getOutgoingLinks() {
+		if (this.outgoingLinks == null) {
+			this.createOutgoingDocumentCollection();
 		}
-		if (incomingLink.equals(this))	{
-			return;
-		}
-		this.incomingLinks.addLast(incomingLink);
+		
+		return this.outgoingLinks;
 	}
 	
-	public static LinkedDocument createLinkedDocumentFromFile(String fileName)	{
-		if (fileName == null)	{
+	private String[] findOutgoingIDs(String text) {
+		if (text == null) {
 			return null;
 		}
 		
-		String[] file = Terminal.readFile(fileName);
+		String textCopy = new String(text);
 		
-		if ((file == null) || (file.length < 2))	{
-			return null;
-		}
+		/* the number of words in the WordCountArray is sufficient */
+		String[] tmpIDs = new String[this.getWordCounts().size()];
 		
-		LinkedDocument ld = new LinkedDocument(file[0], "", "", null, null, file[1], fileName);
+		/* get the next index of the LINK_PREFIX */
+		int index = textCopy.indexOf(LinkedDocument.LINK_PREFIX);
 		
-		return ld;
-	}
-	
-	private void createOutgoingDocumentCollection()	{
-		if (this.links.length < 1)	{
-			return;
-		}
+		int noOfIDs = 0;
 		
-		for (int i = 0; i < this.links.length; i++)	{
-			if (!this.getID().equals(this.links[i]))	{
-				this.outgoingLinks.addLast(createLinkedDocumentFromFile(this.links[i]));
+		/* loop ends, when index is not found */
+		while (index != -1) {
+			/* divide the text at the found index */
+			String strBeforeLink = textCopy.substring(0, index);
+			String strWithLink = textCopy.substring(index);
+
+			int endIndex = strWithLink.indexOf(' ');
+			
+			String link;
+			
+			/* if endIndex is not found, we are looking at the last word */
+			if (endIndex == -1) {
+				link = strWithLink.substring(0);
+				textCopy = strBeforeLink;
 			}
+			else {
+				/* otherwise, there are more words */
+				link = strWithLink.substring(0, endIndex);				
+				textCopy = strBeforeLink + strWithLink.substring(endIndex + 1);
+			}			
+			
+			/* add the ID to array */
+			tmpIDs[noOfIDs] = link.substring(LinkedDocument.LINK_PREFIX.length());
+			noOfIDs++;
+			
+			/* get next index for next loop */
+			index = textCopy.indexOf(LinkedDocument.LINK_PREFIX);
 		}
-	}
-	
-	public LinkedDocumentCollection getOutgoingLinks()	{
-		this.createOutgoingDocumentCollection();
 		
-		if (this.outgoingLinks.isEmpty())	{
-			return null;
-		}	else	{
-			return this.outgoingLinks;
+		
+		/* create new array with the size according to the actual number of found IDs */
+		String[] ids = new String[noOfIDs];
+		
+		for (int i = 0; i < noOfIDs; i++) {
+			ids[i] = tmpIDs[i];
+		}
+		
+		return ids;
+	}
+
+	public void addIncomingLink(LinkedDocument incomingLink) {
+		/* do not allow link on itself */
+		if (!this.equals(incomingLink)) {
+			/* addLast() will do the check, if document is already contained */
+			this.incomingLinks.addLast(incomingLink);
 		}
 	}
 	
-	public LinkedDocumentCollection getIncomingLinks()	{
+	public LinkedDocumentCollection getIncomingLinks() {
 		return this.incomingLinks;
 	}
 }

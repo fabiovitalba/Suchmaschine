@@ -2,7 +2,8 @@
 public class Test {
 	
 	public static void main(String[] args) {		
-		LinkedDocumentCollection dc = new LinkedDocumentCollection();
+		
+		LinkedDocumentCollection ldc = new LinkedDocumentCollection();
 		String command;
 		
 		boolean exit = false;
@@ -19,31 +20,28 @@ public class Test {
 				String titleAndText = command.substring(4);
 				
 				/* title and text separated by : */
-				int separator = titleAndText.indexOf(':');		
+				int separator = titleAndText.indexOf(':');				
+				String title = titleAndText.substring(0, separator);
+				String text = titleAndText.substring(separator + 1);
 				
-				if (separator != -1) {
-					String title = titleAndText.substring(0, separator);
-					String text = titleAndText.substring(separator + 1);
-					
-					dc.addLast(new LinkedDocument(title, "", "", null, null, text, title));
-				}
+				ldc.addLast(new LinkedDocument(title, "", "", null, null, text, title));
 			}
 			else if (command.startsWith("list")) {
 				/* list all document in collection */
-				for (int i = 0; i < dc.size(); i++) {
-					System.out.println(dc.get(i).getTitle());
+				for (int i = 0; i < ldc.size(); i++) {
+					System.out.println(ldc.get(i).getTitle());
 				}
 			}
 			else if (command.startsWith("query ")) {
 				/* query on the documents in the collection */
 				String query = command.substring(6);
+
+				ldc.match(query);				
 				
-				dc.match(query);
-				
-				for (int i = 0; i < dc.size(); i++) {
-					System.out.println((i + 1) + ". " + dc.get(i).getTitle() 
-							+ "; Aehnlichkeit: " + dc.getQuerySimilarity(i));
-				}
+				for (int i = 0; i < ldc.size(); i++) {
+					System.out.println((i + 1) + ". " + ldc.get(i).getTitle() + "; Aehnlichkeit: " 
+								+ ldc.getQuerySimilarity(i));
+				}				
 				
 				System.out.println();
 			}
@@ -51,8 +49,8 @@ public class Test {
 				/* print the count of a word in each document */
 				String word = command.substring(6);
 				
-				for (int i = 0; i < dc.size(); i++) {
-					Document doc = dc.get(i);
+				for (int i = 0; i < ldc.size(); i++) {
+					Document doc = ldc.get(i);
 					WordCountArray docWordCounts = doc.getWordCounts();
 										
 					int count = docWordCounts.getCount(docWordCounts.getIndex(word));
@@ -66,16 +64,8 @@ public class Test {
 					}
 				}
 			}
-			else if (command.startsWith("crawl ")) {
-				DocumentCollectionCell tmp = dc.crawl().first;
-				
-				while (tmp != null)	{
-					dc.addLast(tmp.getDocument());
-					
-					tmp = tmp.getNext();
-				}
-				
-				System.out.println("Kommando crawl wurde ausgefuehrt. Die neuen Dokumente wurden hinzugefuegt.");
+			else if (command.startsWith("crawl")) {
+				ldc = ldc.crawl();
 			}
 		}
 	}

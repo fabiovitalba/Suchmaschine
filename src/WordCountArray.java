@@ -1,11 +1,34 @@
-
+/**
+ * This class represents a set words and its counts.
+ * 
+ * This class ensures, that no empty words are added and that the word count
+ * is always greater than or equal to <code>0</code>.
+ * 
+ */
 public class WordCountArray {
-	//Attributes
+	/**
+	 * the administered WordCount-objects
+	 */
 	private WordCount[] wordCounts;
+	
+	/**
+	 * the actual number of administered WordCount-objects 
+	 */
 	private int actualSize;
+	
+	
+	/**
+	 * the maximum number of administrable WordCount-objects;
+	 */
 	private int maxSize;
 	
-	//Constructors
+	/**
+	 * Creates a new instance of this class.
+	 * 
+	 * The created instance is able to administer at most <code>maxSize</code> words.
+	 *  
+	 * @param maxSize the maximum number of words that can be administered by this instance
+	 */
 	public WordCountArray(int maxSize) {		
 		if (maxSize < 0) {
 			this.maxSize = 0;
@@ -17,7 +40,23 @@ public class WordCountArray {
 		this.wordCounts = new WordCount[this.maxSize];
 	}
 	
-	//Methods
+	
+	/**
+	 * Adds the specified word with the specified count to this instance.
+	 * 
+	 * If the specified word is already administered by this instance, then the
+	 * count of the specified word is increased by the given count.
+	 * 
+	 * If the specified word is not already administered by this instance, 
+	 * this method creates a new {@link WordCount} instance and administers this newly created
+	 * with count <code>count</code>.
+	 * If the specified word is <code>null</code> or an empty {@link String}, nothing will happen.
+	 * If the specified count is lower than <code>0</code>, nothing will happen.
+	 * 
+	 * 
+	 * @param word the word to be added
+	 * @param count the count of the word to be added
+	 */
 	public void add(String word, int count) {
 		if (word == null || word.equals("")) {
 			return;
@@ -51,10 +90,24 @@ public class WordCountArray {
 		}
 	}
 	
+	
+	/**
+	 * Returns the number of words currently administered by this instance.
+	 * 
+	 * @return the number of words currently administered by this instance
+	 */
 	public int size() {
 		return this.actualSize;
 	}
-
+	
+	
+	/**
+	 * Returns the word at the position <code>index</code> of the {@link WordCount}-Array.
+	 * 
+	 * @param index the index
+	 * @return the word at the specified <code>index</code> or <code>null</code>,
+	 * if the specified <code>index</code> is illegal.
+	 */
 	public String getWord(int index) {
 		if (index < 0 || index >= this.actualSize) {
 			return null;
@@ -62,7 +115,15 @@ public class WordCountArray {
 		
 		return this.wordCounts[index].getWord();		
 	}
-
+	
+	
+	/**
+	 * Returns the count of the word at position <code>index</code> of the {@link WordCount}-Array.
+	 * 
+	 * @param index the index
+	 * @return the count of the word at the specified <code>index</code> or <code>-1</code>,
+	 * if the specified <code>index</code> is illegal
+	 */
 	public int getCount(int index) {
 		if (index < 0 || index >= this.actualSize) {
 			return -1;
@@ -70,7 +131,19 @@ public class WordCountArray {
 		
 		return this.wordCounts[index].getCount();
 	}
-
+	
+	
+	/**
+	 * Sets the count of the word at position <code>index</code> of the
+	 * {@link WordCount}-Array to the specified <code>count</code>.
+	 * 
+	 * If the specified <code>index</code> is illegal, nothing will happen. 
+	 * If the specified <code>count</code> is lower than <code>0</code>,
+	 * the count is set to <code>0</code>.
+	 * 
+	 * @param index the index of the word whose frequency will be changed
+	 * @param count the new frequency of the word at position <code>index</code>
+	 */
 	public void setCount(int index, int count) {
 		if (index < 0 || index >= this.actualSize) {
 			return;
@@ -82,7 +155,11 @@ public class WordCountArray {
 			this.wordCounts[index].setCount(count);
 		}
 	}
-
+	
+	
+	/**
+	 * Doubles the number of administerable WordCount-objects,
+	 */
 	private void doubleSize() {
 		this.maxSize = this.maxSize * 2;
 		
@@ -101,6 +178,16 @@ public class WordCountArray {
 		this.wordCounts = newWordCounts;
 	}
 	
+	
+
+	/**
+	 * Returns the index of the internal
+	 * {@link WordCount}-Array where the specified word is administered.
+	 * 
+	 * @param word the word for which we want to know the index
+	 * @return the index of the specified word in the internal array,
+	 * 		or <code>-1</code> if this word is not administered
+	 */
 	public int getIndex(String word) {
 		/* make it short */
 		if (word == null || word.equals("")) {
@@ -117,6 +204,17 @@ public class WordCountArray {
 		return -1;
 	}
 	
+	
+	
+	
+	
+	/**
+	 * Private helper method that returns the <code>WordCount</code>-object at the specified index.
+	 * 
+	 * @param index the index
+	 * @return the <code>WordCount</code>-object at the specified index or <code>null</code>,
+	 * 			if the specified index is illegal
+	 */
 	private WordCount get(int index) {
 		if (index < 0 || index >= this.actualSize) {
 			return null;
@@ -124,11 +222,28 @@ public class WordCountArray {
 		
 		return this.wordCounts[index];
 	}
+	
 
+	
+	
+	/**
+	 * Sorts the <code>WordCount</code> objects administered by this instance.
+	 * 
+	 * After calling this method the administered <code>WordCount</code> objects 
+	 * are ordered lexicographically according to the words represented by the
+	 * <code>WordCount</code> objects.
+	 */
 	public void sort() {
 		this.bucketSort();
 	}
 
+
+	/**
+	 * Sorts the <code>WordCount</code> objects administered by this instance
+	 * with the bucket sort algorithm.
+	 * 
+	 * This method assumes, that all words begin with a lower case letter.
+	 */
 	private void bucketSort() {
 		/* one bucket for every character */
 		WordCountArray[] buckets = new WordCountArray[26];
@@ -165,7 +280,12 @@ public class WordCountArray {
 		this.wordCounts = newWordCounts;
 		this.maxSize = this.actualSize;
 	}
-
+	
+	
+	/**
+	 * Sorts the <code>WordCount</code> objects administered by this instance
+	 * with the bubble sort algorithm. 
+	 */
 	private void bubbleSort() {
 		for (int pass = 1; pass < this.actualSize; pass++) {
 			for (int i = 0; i < this.actualSize - pass; i++) {
@@ -177,7 +297,25 @@ public class WordCountArray {
 			}
 		}
 	}
-
+	
+	
+	/**
+	 * Determines, whether the words administered by this instance and the words
+	 * in the specified {@link WordCountArray} are equal.
+	 * 
+	 * This method returns <code>true</code>, if
+	 * <ul>
+	 *  <li>the words administered by this instance
+	 *     and the words administered by the specified {@link WordCountArray} instance
+	 *     are the same <b>and</b></li>
+	 *  <li>the words are in the same order</li>
+	 * </ul>
+	 * Otherwise, this method will return <code>false</code>.
+	 * 
+	 * @param wca the {@link WordCountArray} that will be compared
+	 * @return <code>true</code>, if the administered words equal as described in detail above;
+	 * <code>false</code> otherwise.
+	 */
 	private boolean wordsEqual(WordCountArray wca) {
 		/* make it short: the same */
 		if (this == wca) {
@@ -189,6 +327,8 @@ public class WordCountArray {
 			return false;
 		}
 		
+
+		
 		/* compare every single word at every position */
 		for (int i = 0; i < this.size(); i++) {
 			if (!this.getWord(i).equals(wca.getWord(i))) {
@@ -198,7 +338,18 @@ public class WordCountArray {
 		
 		return true;
 	}
-
+	
+	
+	
+	/**
+	 * Calculate the similarity of this instance and the specified {@link WordCountArray}.
+	 * 
+	 * This method will return a value between <code>0</code> and <code>1</code>.
+	 * If <code>wca</code> is <code>null</code>, <code>0</code> is returned.
+	 * 
+	 * @param wca the 2nd {@link WordCountArray}
+	 * @return the similarity between this instance and the specified {@link WordCountArray}
+	 */
 	public double similarity(WordCountArray wca) {	
 		if (wca == null) {
 			return 0;
@@ -215,7 +366,70 @@ public class WordCountArray {
 		
 		return scalarProduct;
 	}
+	
 
+	
+	
+	/**
+	 * Calculate the complex scalar product of the normalized weights of this instance and the
+	 * normalized weights of the specified {@link WordCountArray}.
+	 * The scalar product is calculated according to the specified {@link DocumentCollection}.
+	 * 
+	 * If the two {@link WordCountArray} have a different size, <code>0</code> is returned.
+	 * Also, if the words contained in the two {@link WordCountArray}s are not
+	 * exactly the same (cf. {@link WordCountArray#wordsEqual(WordCountArray)}),
+	 * the result is <code>0</code>. If <code>wca</code> is <code>null</code>, <code>0</code>
+	 * is returned.
+	 * 
+	 * @param wca the 2nd {@link WordCountArray}
+	 * @param dc the {@link DocumentCollection} to use
+	 * @return the scalar product of this instance and the specified {@link WordCountArray}
+	 */
+	private double scalarProduct(WordCountArray wca, DocumentCollection dc) {
+		if (wca == null || dc == null) {
+			return 0;
+		}
+		
+		/* scalar product is 0 by definition, if size is different */
+		if (this.size() != wca.size()) {
+			return 0;
+		}
+		
+		/* also, the scalar product is 0 by definition, 
+		   if the contained words are not exactly the same.
+		   Though, if this == wca we do not have to do the wordsEqual()-check. */
+		if ((this != wca) && !this.wordsEqual(wca)) {
+			return 0;
+		}
+		
+		/* first, calculate normalized weights */
+		this.calculateNormalizedWeights(dc);
+		
+		double scalarProduct = 0;
+		
+		for (int i = 0; i < this.size(); i++) {
+			scalarProduct += this.wordCounts[i].getNormalizedWeight() * wca.wordCounts[i].getNormalizedWeight();		
+		}
+
+		return scalarProduct;
+	}
+	
+	
+	
+
+	/**
+	 * Calculate the scalar product of the word counts of this instance and the
+	 * word counts of the specified {@link WordCountArray}.
+	 * 
+	 * If the two {@link WordCountArray} have a different size, <code>0</code> is returned.
+	 * Also, if the words contained in the two {@link WordCountArray}s are not
+	 * exactly the same (cf. {@link WordCountArray#wordsEqual(WordCountArray)}),
+	 * the result is <code>0</code>. If <code>wca</code> is <code>null</code>, <code>0</code>
+	 * is returned.
+	 * 
+	 * @param wca the 2nd {@link WordCountArray}
+	 * @return the scalar product of this instance and the specified {@link WordCountArray}
+	 */
 	private double scalarProduct(WordCountArray wca) {
 		if (wca == null) {
 			return 0;
@@ -241,7 +455,15 @@ public class WordCountArray {
 		
 		return scalarProduct;
 	}
-
+	
+	
+	
+	/**
+	 * Returns true, if this instance and the specified {@link WordCountArray} equal.
+	 * 
+	 * @param wca the other WordCountArray 
+	 * @return true, if this instance and the specified {@link WordCountArray} equal
+	 */
 	public boolean equals(WordCountArray wca) {
 		/* make it short: the same */
 		if (this == wca) {
@@ -253,6 +475,8 @@ public class WordCountArray {
 			return false;
 		}
 		
+
+		
 		/* compare every single word and their counts at every position */
 		for (int i = 0; i < this.size(); i++) {
 			if (!this.getWord(i).equals(wca.getWord(i)) || this.getCount(i) != wca.getCount(i)) {
@@ -263,76 +487,130 @@ public class WordCountArray {
 		return true;
 	}
 	
-	private void calculateWeights(DocumentCollection dc)	{
-		if (dc == null) {
-			return;
-		}
-		
-		double invertedFrequency = 0;
-		int noOfDocs = 0;
-		
-		for (int i = 0; i < this.size(); i++)	{
-			noOfDocs = dc.noOfDocumentsContainingWord(this.getWord(i));
-			
-			invertedFrequency = Math.log((dc.size() + 1)/(noOfDocs));
-		
-			this.get(i).setWeight(this.getCount(i) * invertedFrequency);
-		}
-	}
 	
-	private void calculateNormalizedWeights(DocumentCollection dc)	{
-		if (dc == null) {
-			return;
-		}
-		
-		double normalizedWeight;
-		double weightSquareSum = 0;
-		
-		this.calculateWeights(dc);
-		
-		for (int i = 0; i < this.size(); i++)	{
-			weightSquareSum += Math.pow(this.get(i).getWeight(), 2);
-		}
-		
-		for (int i = 0; i < this.size(); i++)	{
-			normalizedWeight = (this.get(i).getWeight())/Math.sqrt(weightSquareSum);
-			this.get(i).setNormalizedWeight(normalizedWeight);
-		}
-	}
 	
-	private double scalarProduct(WordCountArray wca, DocumentCollection dc)	{
-		if (dc == null || wca == null) {
-			return 0;
-		}
-		if (this.size() != wca.size()) {
-			return 0;
-		}
-		
-		double scalarProduct = 0;
-		this.calculateNormalizedWeights(dc);
-		wca.calculateNormalizedWeights(dc);
-		
-		for (int i = 0; i < this.size(); i++)	{
-			scalarProduct += this.get(i).getNormalizedWeight() * wca.get(i).getNormalizedWeight();
-		}
-		
-		return scalarProduct;
-	}
-	
+	/**
+	 * Calculate a complex similarity of this instance and the specified {@link WordCountArray}
+	 * based on the specified {@link DocumentCollection}.
+	 * 
+	 * This method will return a value between <code>0</code> and <code>1</code>.
+	 * If <code>wca</code> is <code>null</code>, <code>0</code> is returned.
+	 * 
+	 * @param wca the 2nd {@link WordCountArray}
+	 * @param dc the {@link DocumentCollection} where the similarity is calculated on
+	 * @return the similarity between this instance and the specified {@link WordCountArray}
+	 */
 	public double similarity(WordCountArray wca, DocumentCollection dc) {	
-		if (wca == null) {
+		if (wca == null || dc == null) {
 			return 0;
 		}
 
-		double scalarProductThis = this.scalarProduct(this, dc);
-		double scalarProductWca = wca.scalarProduct(wca, dc);
+//		double scalarProductThis = this.scalarProduct(this, dc);
+		//Force wca to compute normalized weights otherwise scalarproduct ist always 0
+		wca.scalarProduct(wca, dc);
 		
 		double scalarProduct = 0;
 		
-		if (scalarProductThis != 0 && scalarProductWca != 0) {
-			scalarProduct = this.scalarProduct(wca, dc) / (Math.sqrt(scalarProductThis * scalarProductWca));
-		}
+		
+		scalarProduct = this.scalarProduct(wca, dc);
+		
 		
 		return scalarProduct;
+	}
+	
+	
+	
+	/**
+	 * This private helper method calculates the weights 
+	 * of the words in this instance according to 
+	 * the specified {@link DocumentCollection}.
+	 * 
+	 * 
+	 * @param dc the {@link DocumentCollection}
+	 */
+	private void calculateWeights(DocumentCollection dc) {
+		if (dc == null) {
+			return;
+		}
+
+		/* loop over all words, calculate their weights and store them */
+		for (int i = 0; i < this.size(); i++) {
+			int noOfDocumentsContainingWord = dc.noOfDocumentsContainingWord(this.getWord(i));
+			
+			// Be careful! There may be words in the WordCountArray with count 0
+			// that are no longer in any document
+			if (noOfDocumentsContainingWord != 0) {			
+				double invDocFreq = Math.log((dc.size() + 1)
+						/ (double) dc.noOfDocumentsContainingWord(this.getWord(i)));
+				wordCounts[i].setWeight(this.getCount(i) * invDocFreq);
+			}
+			else {
+				wordCounts[i].setWeight(0);
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * This private helper method calculates the normalized weights
+	 * of the words in this instance.
+	 *   
+	 * @param dc the {@link DocumentCollection}
+	 */
+	private void calculateNormalizedWeights(DocumentCollection dc) {
+		if (dc == null) {
+			return;
+		}
+		
+		/* calculate usual weights first */
+		this.calculateWeights(dc);
+
+		
+		/* the norm to normalize the weights */
+		double norm = 0;
+		
+		for (int i = 0; i < this.size(); i++) {
+			norm += this.wordCounts[i].getWeight() * this.wordCounts[i].getWeight();
+		}
+		
+		// norm may be 0
+		if (norm > 0) {
+			norm = Math.sqrt(norm);
+			
+			/* loop over words, calculate the normalized weights and store them -> only if norm > 0 */
+			for (int i = 0; i < this.size(); i++) {
+				this.wordCounts[i].setNormalizedWeight(this.wordCounts[i].getWeight() / norm);
+			}
+		}
+		else {		
+			// if norm == 0, set normalized weights to 0
+			for (int i = 0; i < this.size(); i++) {
+				this.wordCounts[i].setNormalizedWeight(0);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Returns a string representation of this {@link WordCountArray}.
+	 * @return a string representation
+	 */
+	@Override
+	public String toString() {
+		if (this.size() == 0) {
+			return "[]";
+		}
+
+		if (this.size() == 1) {
+			return "[" + this.getWord(0) + ":" + this.getCount(0) + "]";
+		}
+
+		String res = "[";
+		for (int i = 0; i < this.size() - 1; i++) {
+			res += this.getWord(i) + ":" + this.getCount(i) + ", ";
+		}
+		res += this.getWord(this.size() - 1) + ":" + this.getCount(this.size() - 1) + "]";
+		return res;
 	}
 }
